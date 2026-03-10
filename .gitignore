@@ -1,0 +1,58 @@
+# --- Python Redundancy ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# --- Virtual Environments ---
+.venv/
+venv/
+env/
+ENV/
+
+# --- Environment & Secrets (CRITICAL) ---
+.env
+.env.*
+secrets.json
+
+# --- Audio/Media Files (POC Data) ---
+# Prevents large audio files from bloating Git
+*.mp3
+*.wav
+*.m4a
+*.ogg
+backend/app/uploads/
+temp_*.mp3
+
+# --- IDEs & Editors ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Testing & Logs ---
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+logs/
+
+# --- OS Specific ---
+.DS_Store
+Thumbs.db
