@@ -19,7 +19,7 @@ In a corporate environment where meetings consume significant time, this tool so
 
 - Backend: FastAPI (Python 3.10+)
 - Agent Orchestration: LangGraph (Stateful, Multi-Agent Workflows)
-- Transcription Engines: * Cloud: Groq LPU (Distil-Whisper-v3) - Latency: 2-5 seconds
+- Transcription Engines: * Cloud: Groq LPU (Whisper-v3-turbo) - Latency: 2-5 seconds
 - Local: OpenAI Whisper (Base Model) - Latency: Depends on Hardware
 - LLM (Brain): Groq Llama 3.3-70B (High Intelligence) & 3.1-8B (Instant Analysis)
 - Frontend: Streamlit (Python-based Rapid Prototyping)
@@ -32,7 +32,7 @@ In a corporate environment where meetings consume significant time, this tool so
 
 System Flow (Logic Graph)
 
-````json
+````mermaid
 
 graph TD
     A[Upload Audio] --> B{Transcriber Mode}
@@ -50,7 +50,7 @@ graph TD
 
 ## Sequence Diagram
 
-````json
+````mermaid
 sequenceDiagram
     participant User as User (Streamlit)
     participant API as FastAPI Backend
