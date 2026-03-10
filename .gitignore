@@ -33,7 +33,7 @@ secrets.json
 
 # --- Audio/Media Files (POC Data) ---
 # Prevents large audio files from bloating Git
-*.mp3
+#*.mp3
 *.wav
 *.m4a
 *.ogg

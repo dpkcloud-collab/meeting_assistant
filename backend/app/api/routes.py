@@ -6,7 +6,6 @@ import traceback
 # --- CLEAN IMPORTS (Relative to 'app' root) ---
 from backend.app.services.whisper_transcriber import transcribe_audio
 from backend.app.services.groq_analyzer import  analyze_meeting
-from backend.app.google.calender_service import  get_upcoming_meetings
 from backend.app.agents.graph import create_meeting_graph
 
 router = APIRouter()
@@ -48,7 +47,7 @@ async def process_meeting(file: UploadFile = File(...)):
 
 # --- NEW AGENTIC ENDPOINT (FIXED REPETITION) ---
 @router.post("/agentic-process")
-async def process_meeting_agentic(file: UploadFile = File(...), mode: str = "groq"):
+async def process_meeting_agentic(file: UploadFile = File(...), mode: str = "groq", diarization: bool = False):
     """
     Triggers the LangGraph workflow and returns a clean, non-repetitive JSON.
     """
@@ -68,17 +67,11 @@ async def process_meeting_agentic(file: UploadFile = File(...), mode: str = "gro
             "transcript": None,
             "raw_insights": None,
             "final_summary": None,
+            "enable_diarization": diarization,
         }
 
-        # initial_state = {
-        #     "audio_path": temp_path,
-        #     "transcript": None,
-        #     "raw_insights": None,
-        #     "final_summary": None,
-        #     "status": "Initiated"
-        # }
+      
 
-        # Run the Graph
         final_state = agentic_app.invoke(initial_state)
 
         # --- DATA EXTRACTION ---

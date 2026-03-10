@@ -13,6 +13,10 @@ st.markdown("Upload your meeting audio to get AI-powered transcriptions, summari
 st.sidebar.header("Settings")
 api_url = st.sidebar.text_input("API URL", "http://127.0.0.1:8000/api/v1/agentic-process")
 
+# Diarization Toggle in Sidebar
+enable_diarization = st.sidebar.checkbox("Enable Speaker Diarization", value=False, help="Identify different speakers (Speaker A, Speaker B)")
+
+
 # File Uploader
 uploaded_file = st.file_uploader("Choose a meeting recording (mp3, wav, m4a)", type=["mp3", "wav", "m4a"])
 
@@ -33,6 +37,9 @@ if uploaded_file is not None:
             try:
                 # Prepare the file for the POST request
                 files = {"file": (uploaded_file.name, uploaded_file.getvalue(), uploaded_file.type)}
+                # Passing both mode and diarization flag to backend
+                params = {"mode": api_mode, "diarization": str(enable_diarization).lower()}
+
                 response = requests.post(f"{api_url}?mode={api_mode}", files=files)
                 # Hit the FastAPI Endpoint
                 # response = requests.post(api_url, files=files)
@@ -85,4 +92,5 @@ if uploaded_file is not None:
 st.sidebar.markdown("---")
 
 
-st.sidebar.info("This POC uses LangGraph + Groq Llama 3 for real-time meeting intelligence.")
+st.sidebar.info("This POC uses LangGraph + Groq Whisper + Groq Llama 3 for real-time meeting intelligence.")
+

@@ -24,7 +24,16 @@ In a corporate environment where meetings consume significant time, this tool so
 - LLM (Brain): Groq Llama 3.3-70B (High Intelligence) & 3.1-8B (Instant Analysis)
 - Frontend: Streamlit (Python-based Rapid Prototyping)
 - Environment: Virtualenv, Dotenv
+---
+## The Multi-Agent Workflow
 
+The system operates as a sequential Agentic Graph. Each agent has a distinct "System Persona" to ensure high-quality, specialized output.
+
+The Workflow Pipeline:
+
+- Transcriber Node: Handles the heavy lifting of audio-to-text conversion.
+- Analyzer Agent: Parses the raw text to extract structured JSON data (tasks, decisions).
+- Summarizer Agent: Polishes the final report for executive readability.
 
 ---
 
@@ -92,6 +101,8 @@ source .venv/bin/Scripts/activate  # Windows: .venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 
+## Dependency 
+FFmpeg (Added to System PATH)
 ````
 
 
@@ -118,9 +129,38 @@ Terminal 2: Streamlit Frontend
 ````bash
 streamlit run streamlit_app/app.py
 ````
+
+For Sample data refer the attached mp3 file at below path
+
+````bash
+cp sample_data\sample_meeting.mp3
+````
+
 ---
 
 ## Business Value (POC Results)
-- Latency Reduction: By implementing the Groq Distil-Whisper path, transcription time for a 3MB file was reduced from ~60 seconds (local CPU) to < 3 seconds.
+- Latency Reduction: By implementing the Groq whisper turbo, transcription time for a 3MB file was reduced from ~30 seconds (local CPU) to < 3 seconds.
 - Cost Efficiency: Using open-source models (Llama 3) via Groq provides GPT-4 level intelligence at a fraction of the cost.
 - Scalability: The LangGraph architecture allows for adding "Search Agents" or "Calendar Agents" in the future without breaking existing code.
+
+
+---
+
+## Future Roadmap & Enhancements
+Phase 2 will focus on turning insights into direct actions.
+
+###  Enterprise Integrations
+Google/Outlook Calendar: Automatically book the "Next Steps" identified by the Analyzer Agent.
+
+Slack/Jira: Push extracted Action Items directly to team project boards.
+
+###  Real-time Diarization
+Implement speaker identification to attribute specific decisions to specific stakeholders (e.g., "John Doe agreed to X").
+
+###  Data Privacy & Security
+PII Masking: Anonymize sensitive data (names, budgets) before cloud processing.
+
+Local-First Mode: Optimization for fully air-gapped on-premise environments.
+
+###  Sentiment & Trend Analysis
+Analyze meeting sentiment over time to detect project risks or team morale shifts.
