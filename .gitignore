@@ -28,7 +28,7 @@ ENV/
 
 # --- Environment & Secrets (CRITICAL) ---
 .env
-.env.*
+# .env.*
 secrets.json
 
 # --- Audio/Media Files (POC Data) ---

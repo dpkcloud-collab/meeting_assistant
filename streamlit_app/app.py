@@ -6,6 +6,9 @@ import pandas as pd
 # Page Config
 st.set_page_config(page_title="Agentic Meeting Assistant", page_icon="🎙️", layout="wide")
 
+if "pdf_bytes" not in st.session_state:
+    st.session_state.pdf_bytes = None
+
 st.title("🎙️ Agentic Meeting Assistant")
 st.markdown("Upload your meeting audio to get AI-powered transcriptions, summaries, and action items.")
 
@@ -50,6 +53,25 @@ if uploaded_file is not None:
 
                     st.success("✅ Analysis Complete!")
 
+                    # Combine all data into the format the PDF service expects
+                    full_data_for_pdf = {
+                        "transcript": result.get("transcript"),
+                        "analysis": analysis
+                    }
+                    
+
+                    # Add a download button using the st.download_button widget
+                    try:
+                        pdf_response = requests.post("http://127.0.0.1:8000/api/v1/download-pdf", json=full_data_for_pdf)
+                        if pdf_response.status_code == 200:
+                            print(f"DEBUG: Received PDF size: {len(response.content)} bytes")
+                            st.session_state.pdf_bytes = pdf_response.content
+                            print(f"DEBUG: Received PDF size 2nd: {len(st.session_state.pdf_bytes)} bytes")
+
+                          
+                    except Exception as e:
+                        st.error("Could not generate PDF download.")
+
                     # Layout: 2 Columns for Summary and Decisions
                     col1, col2 = st.columns(2)
 
@@ -64,7 +86,7 @@ if uploaded_file is not None:
                         for d in decisions:
                             # Handle both string and dict formats
                             text = d.get("decision") if isinstance(d, dict) else d
-                            st.write(f"✅ {text}")
+                            st.write(f" {text}")
 
                     # Action Items Table
                     st.divider()
@@ -86,6 +108,15 @@ if uploaded_file is not None:
                 else:
                     st.error(f"Error: {response.status_code} - {response.text}")
 
+                # 3. SHOW DOWNLOAD BUTTON ONLY IF BYTES EXIST
+                if st.session_state.pdf_bytes:
+                    st.download_button(
+                        label="📥 Download Executive PDF Report",
+                        data=st.session_state.pdf_bytes,
+                        file_name="Meeting_Report.pdf",
+                        mime="application/pdf",
+                        use_container_width=True
+                    )
             except Exception as e:
                 st.error(f"Connection Error: {str(e)}")
 

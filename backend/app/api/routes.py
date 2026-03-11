@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, Response, UploadFile, File, HTTPException
 import shutil
 import os
 import traceback
@@ -7,6 +7,7 @@ import traceback
 from backend.app.services.whisper_transcriber import transcribe_audio
 from backend.app.services.groq_analyzer import  analyze_meeting
 from backend.app.agents.graph import create_meeting_graph
+from backend.app.services.pdf_service import generate_meeting_pdf
 
 router = APIRouter()
 
@@ -98,3 +99,38 @@ async def process_meeting_agentic(file: UploadFile = File(...), mode: str = "gro
             os.remove(temp_path)
 
 
+
+@router.post("/download-pdf")
+async def download_report(data: dict):
+    raw_pdf = generate_meeting_pdf(data)
+    
+    # headers = {
+    #     'Content-Disposition': 'attachment; filename="Meeting_Intelligence_Report.pdf"'
+    # }
+    # return Response(
+    #     content=pdf_bytes, 
+    #     media_type="application/pdf", 
+    #     headers=headers
+    # )
+
+
+    # Ensure it is converted to standard bytes
+    # if not isinstance(pdf_content, bytes):
+    #     pdf_content = bytes(pdf_content)
+
+    if isinstance(raw_pdf, (bytearray, memoryview)):
+        pdf_bytes = bytes(raw_pdf)
+    elif isinstance(raw_pdf, str):
+        pdf_bytes = raw_pdf.encode('latin-1')
+    else:
+        pdf_bytes = raw_pdf
+    
+    return Response(
+        content=pdf_bytes, 
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": "attachment; filename=Meeting_Report.pdf",
+            "Content-Length": str(len(pdf_bytes)), # Explicitly tell the browser the size
+            "Access-Control-Expose-Headers": "Content-Disposition"
+        }
+    )
