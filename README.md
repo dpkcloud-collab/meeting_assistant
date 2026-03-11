@@ -45,7 +45,7 @@ System Flow (Logic Graph)
 
 graph TD
     A[Upload Audio] --> B{Transcriber Mode}
-    B -- Groq Cloud --> C[Groq distil-whisper-v3]
+    B -- Groq Cloud --> C[Groq whisker large-v3-turbo]
     B -- Local On-Prem --> D[Whisper Base Model]
     C --> E[State: Transcript]
     D --> E
